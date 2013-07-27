@@ -15,6 +15,12 @@ class BackBeamTest < Test::Unit::TestCase
   def test_get_a_limited_group_of_entities
     assert @backbeam.get_entities('alchup', {:limit => 10}).size > 0
   end
+
+  def test_throw_errors_from_backbeam
+    assert_raise BackBeamException do
+    	@backbeam.get_entities('entidad_chanante_que_no_existe')
+    end
+  end
 end
 
 require 'json'
@@ -34,9 +40,13 @@ class BackBeam
 	def get_entities(entity_name, parameters={})
 		parameters.merge!({:time=>now, :nonce=>uuid, :key => @key})
 		add_signature(parameters, "/data/#{entity_name}", GET)
-		response = RestClient.get("http://api-dev-alchups.backbeamapps.com/data/#{entity_name}", {:params => parameters})
-		json = JSON.parse response
-		json['objects']
+		begin  
+  			response = RestClient.get("http://api-dev-alchups.backbeamapps.com/data/#{entity_name}", {:params => parameters})
+  			json = JSON.parse response
+			json['objects']
+		rescue Exception => e
+		  raise BackBeamException.new(e.response), e.message
+		end  
 	end
 
 
@@ -58,5 +68,14 @@ class BackBeam
 
 	def now
 		Time.now.to_i*1000
+	end
+end
+
+class BackBeamException < StandardError
+	attr_accessor :status
+
+	def initialize(response=nil)
+		json = JSON.parse response
+		@status = json['status']
 	end
 end
