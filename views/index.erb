@@ -1,0 +1,20 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+<title>Alchups!</title>
+</head>
+<body>
+	<h1>Alchups?</h1>
+	<p>
+		Alchups viene a ser <a href="http://es.wikipedia.org/wiki/Aljibe">Aljibes</a> en dialecto <strong>Santistebut <a href="http://es.wikipedia.org/wiki/Dialecto_ribagorzano" target="blank">Ribagorzano</a></strong>.
+	</p>
+	
+	<p>Próximamente en tu monitor, esta web, un proyecto de gentes de <a href="http://www.sanestebandelitera.es/">Santistebe de Llitera</a>, per viure la vida entera!</p>
+	
+	<ul>
+		<% for alchup in alchups%>
+			<li><%= alchup[1]['name#t']%></li>
+		<% end %>
+	</ul>
+</body>
+</html>
